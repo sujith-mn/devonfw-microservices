@@ -20,7 +20,9 @@ import org.tkit.quarkus.jpa.daos.PageResult;
 
 import com.devonfw.application.quarkus.sample.animalmanagement.common.api.AnimalSearchCriteria;
 import com.devonfw.application.quarkus.sample.animalmanagement.dataaccess.api.Animal;
+
 import com.devonfw.application.quarkus.sample.animalmanagement.dataaccess.api.Animal_;
+
 
 import io.micrometer.core.annotation.Counted;
 import io.opentracing.Tracer;

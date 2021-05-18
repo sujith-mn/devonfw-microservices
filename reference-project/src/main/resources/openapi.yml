@@ -1,0 +1,188 @@
+openapi: 3.0.3
+info:
+  title: My Demo App RESTful API
+  contact:
+    name: API Support
+    email: support@acme.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+tags:
+- name: animal
+  description: Animal operations.
+paths:
+  /animals:
+    get:
+      description: Returns list of all animals in DB
+      operationId: GetAllAnimals
+      parameters:
+      - name: legs
+        in: query
+        schema:
+          format: int32
+          type: integer
+      - name: name
+        in: query
+        schema:
+          type: string
+      - name: page
+        in: query
+        schema:
+          format: int32
+          default: 0
+          type: integer
+      - name: size
+        in: query
+        schema:
+          format: int32
+          default: 100
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AnimalDTO'
+
+    post:
+      description: Stores new animal in DB
+      operationId: createNewAnimal
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewAnimalDTO'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnimalDTO'
+        "400":
+          description: "Client side error, invalid request"
+
+  /animals/error:
+    get:
+      responses:
+        "200":
+          description: OK
+  /animals/{id}:
+    get:
+      description: Returns animal with given id
+      operationId: getAnimalById
+      parameters:
+      - name: id
+        in: path
+        description: Animal unique id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnimalDTO'
+        "404":
+          description: Animal not found
+
+    delete:
+      description: Deletes the animal with given id
+      operationId: deleteAnimalById
+      parameters:
+      - name: id
+        in: path
+        description: Animal unique id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnimalDTO'
+        "404":
+          description: Animal not found
+
+  /animals/{id}/facts:
+    get:
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+components:
+  schemas:
+    NewAnimalDTO:
+      type: object
+      properties:
+        basicInfo:
+          description: Animal tag line
+          maxLength: 50
+          minLength: 3
+          type: string
+        name:
+          description: Animal name
+          maxLength: 50
+          minLength: 3
+          type: string
+          nullable: false
+        numberOfLegs:
+          format: int32
+          description: How many legs does the animal have
+          type: integer
+          example: 3
+    Principal:
+      type: object
+      properties:
+        name:
+          type: string
+    AnimalDTO:
+      type: object
+      properties:
+        controlTraceabilityManual:
+          type: boolean
+        creationDate:
+          format: date-time
+          type: string
+        creationUser:
+          type: string
+        modificationDate:
+          format: date-time
+          type: string
+        modificationUser:
+          type: string
+        persisted:
+          type: boolean
+        principal:
+          $ref: '#/components/schemas/Principal'
+        version:
+          format: int32
+          type: integer
+        id:
+          type: string
+        basicInfo:
+          type: string
+        name:
+          type: string
+        numberOfLegs:
+          format: int32
+          type: integer
